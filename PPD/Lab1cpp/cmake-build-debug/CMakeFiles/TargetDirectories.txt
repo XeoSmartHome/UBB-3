@@ -1,3 +1,3 @@
-C:/UBB/PPD/Lab1cpp/cmake-build-debug/CMakeFiles/Lab1cpp.dir
-C:/UBB/PPD/Lab1cpp/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/UBB/PPD/Lab1cpp/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/claudiuneamtu/WebstormProjects/UBB-3/PPD/Lab1cpp/cmake-build-debug/CMakeFiles/Lab1cpp.dir
+/Users/claudiuneamtu/WebstormProjects/UBB-3/PPD/Lab1cpp/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/claudiuneamtu/WebstormProjects/UBB-3/PPD/Lab1cpp/cmake-build-debug/CMakeFiles/rebuild_cache.dir
