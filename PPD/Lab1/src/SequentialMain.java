@@ -40,8 +40,8 @@ public class SequentialMain extends GenericMain {
             }
         }
         long endTime = System.nanoTime();
-        long executionTime = endTime - startTime;
-        System.out.println("Sequential time: " + (executionTime) / 1e6 + " ms");
+        double executionTime = (endTime - startTime) / 1e6;
+        System.out.println("Sequential time: " + executionTime + " ms");
 
         try {
             writeResult(fileName);

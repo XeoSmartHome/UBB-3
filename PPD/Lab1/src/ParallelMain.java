@@ -51,7 +51,7 @@ public class ParallelMain extends GenericMain {
             }
         }
         long endTime = System.nanoTime();
-        long executionTime = (endTime - startTime) / 1e6;
+        double executionTime = (endTime - startTime) / 1e6;
 
         if (checkResult(fileName)) {
             System.out.println("Execution time: " + executionTime / 1e6 + "ms");

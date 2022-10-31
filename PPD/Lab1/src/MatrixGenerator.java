@@ -23,7 +23,7 @@ public class MatrixGenerator {
             }
         }
 
-        try (FileWriter fileWriter = new FileWriter(String.format("%s\\%d_%d_%d.txt", resourceFolder, k, n, m))) {
+        try (FileWriter fileWriter = new FileWriter(String.format("%s\\input_%d_%d_%d.txt", resourceFolder, k, n, m))) {
             fileWriter.write(String.format("%d %d %d\n", k, n, m));
             for (int i = 0; i < k; i++) {
                 for (int j = 0; j < k; j++) {

@@ -72,23 +72,24 @@ void myThread(int start, int stop) {
 }
 
 int main(int argc, const char *argv[]) {
-    readMatrix(argv[1]);
-    int threadsCount = atoi(argv[2]);
-
-    auto startTime = chrono::high_resolution_clock::now();
-    for(int i = 0; i < threadsCount; i++) {
-        threads[i] = thread(myThread, i * n / threadsCount, (i + 1) * n / threadsCount);
-    }
-    for(int i = 0; i < threadsCount; i++) {
-        threads[i].join();
-    }
-    auto endTime = chrono::high_resolution_clock::now();
-    double executionTime = chrono::duration<double, milli>(endTime - startTime).count();
-
-    checkResult(argv[1]);
-
-    cout << "Execution time: " << executionTime << " ms" << endl;
-
-    cout << executionTime << endl;
+    cout << "Hello, World!" << endl;
+//    readMatrix(argv[1]);
+//    int threadsCount = atoi(argv[2]);
+//
+//    auto startTime = chrono::high_resolution_clock::now();
+//    for(int i = 0; i < threadsCount; i++) {
+//        threads[i] = thread(myThread, i * n / threadsCount, (i + 1) * n / threadsCount);
+//    }
+//    for(int i = 0; i < threadsCount; i++) {
+//        threads[i].join();
+//    }
+//    auto endTime = chrono::high_resolution_clock::now();
+//    double executionTime = chrono::duration<double, milli>(endTime - startTime).count();
+//
+//    checkResult(argv[1]);
+//
+//    cout << "Execution time: " << executionTime << " ms" << endl;
+//
+//    cout << executionTime << endl;
     return 0;
 }

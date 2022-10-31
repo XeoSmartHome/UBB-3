@@ -1,0 +1,3 @@
+C:/UBB/PPD/Lab1cpp/cmake-build-release/CMakeFiles/Lab1cpp.dir
+C:/UBB/PPD/Lab1cpp/cmake-build-release/CMakeFiles/edit_cache.dir
+C:/UBB/PPD/Lab1cpp/cmake-build-release/CMakeFiles/rebuild_cache.dir
