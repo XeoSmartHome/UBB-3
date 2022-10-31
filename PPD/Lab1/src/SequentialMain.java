@@ -1,35 +1,53 @@
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.Scanner;
 
-public class SequentialMain {
-    private static final String resourceFolder = "data";
+public class SequentialMain extends GenericMain {
 
-    private static double[][] readMatrix(String filename) throws FileNotFoundException {
-        FileReader fileReader = new FileReader(String.format("%s\\%s", resourceFolder, filename));
-        Scanner scanner = new Scanner(fileReader);
-        int n = scanner.nextInt();
-        int m = scanner.nextInt();
-        double[][] matrix = new double[n][m];
+    private static void writeResult(String filename) throws IOException {
+        FileWriter fileWriter = new FileWriter(String.format("%s\\%s", resourceFolder, filename.replace(".txt", "_result.txt")));
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                matrix[i][j] = scanner.nextDouble();
+                fileWriter.write(String.format("%f ", result[i][j]));
             }
+            fileWriter.write("\n");
         }
-        return matrix;
+        fileWriter.close();
     }
 
     public static void main(String[] args) {
+        String fileName = args[0];
         try {
-            double[][] matrix = readMatrix("input_10_10.txt");
-            for (double[] doubles : matrix) {
-                for (double aDouble : doubles) {
-                    System.out.print(aDouble + " ");
-                }
-                System.out.println();
-            }
+            readMatrix(fileName);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return;
         }
+        result = new double[n][m];
+
+        //
+        long startTime = System.nanoTime();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                double sum = 0;
+                for (int ki = 0; ki < k; ki++) {
+                    for (int kj = 0; kj < k; kj++) {
+                        int mi = Math.min(Math.max(i + ki - k / 2, 0), n - 1);
+                        int mj = Math.min(Math.max(j + kj - k / 2, 0), m - 1);
+                        sum += matrix[mi][mj] * kernel[ki][kj];
+                    }
+                }
+                result[i][j] = sum;
+            }
+        }
+        long endTime = System.nanoTime();
+        long executionTime = endTime - startTime;
+        System.out.println("Sequential time: " + (executionTime) / 1e6 + " ms");
+
+        try {
+            writeResult(fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(executionTime);
     }
 }
