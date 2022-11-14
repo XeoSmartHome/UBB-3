@@ -15,7 +15,7 @@ public class SequentialMain extends GenericMain {
     }
 
     public static void main(String[] args) {
-        String fileName = args[0];
+        String fileName = "input_5_10000_10.txt";//args[0];
         try {
             readMatrix(fileName);
         } catch (FileNotFoundException e) {

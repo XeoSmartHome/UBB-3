@@ -5,9 +5,9 @@ public class MatrixGenerator {
     private static final String resourceFolder = "data";
 
     public static void main(String[] args) {
-        int k = Integer.parseInt(args[0]);
-        int n = Integer.parseInt(args[1]);
-        int m = Integer.parseInt(args[2]);
+        int k = 5;//Integer.parseInt(args[0]);
+        int n = 10;//Integer.parseInt(args[1]);
+        int m = 10000;//Integer.parseInt(args[2]);
 
         double kernel[][] = new double[k][k];
         for (int i = 0; i < k; i++) {
