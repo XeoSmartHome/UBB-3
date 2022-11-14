@@ -1,0 +1,3 @@
+C:/UBB/PPD/Lab2CPP/cmake-build-debug-mingw/CMakeFiles/Lab2CPP.dir
+C:/UBB/PPD/Lab2CPP/cmake-build-debug-mingw/CMakeFiles/edit_cache.dir
+C:/UBB/PPD/Lab2CPP/cmake-build-debug-mingw/CMakeFiles/rebuild_cache.dir
