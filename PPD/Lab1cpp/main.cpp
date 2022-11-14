@@ -12,9 +12,12 @@
 using namespace std;
 
 int n, m, k;
-double matrix[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE];
-double result[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE];
-double kernel[MAX_KERNEL_SIZE][MAX_KERNEL_SIZE];
+//double matrix[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE];
+//double result[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE];
+//double kernel[MAX_KERNEL_SIZE][MAX_KERNEL_SIZE];
+double ** matrix;
+double ** result;
+double ** kernel;
 thread threads[MAX_THREADS];
 
 string resourceFolder = "../data";
@@ -23,7 +26,19 @@ void readMatrix(const string &filename) {
 //    cout << "Reading matrix from " << filename << endl;
     ifstream inputFile(resourceFolder + "/" + filename);
     inputFile >> k >> n >> m;
-//    cout << k << " " << n << " " << m << endl;
+    // alocare dinamica
+    matrix = new double*[n];
+    result = new double*[n];
+    for (int i = 0; i < n; i++) {
+        matrix[i] = new double[m];
+        result[i] = new double[m];
+    }
+    kernel = new double*[k];
+    for (int i = 0; i < k; i++) {
+        kernel[i] = new double[k];
+    }
+    // sfarsit alocare dinamica
+    // cout << k << " " << n << " " << m << endl;
     for (int i = 0; i < k; i++) {
         for (int j = 0; j < k; j++) {
             inputFile >> kernel[i][j];

@@ -1,3 +1,9 @@
+# Programare Paralela si Distribuita - Lab 1
+### Neamtu Claudiu
+### 235/1
+
+---
+
 ### Cerinta
 
 Se considera o imagine reprezentata printr-o matrice de pixeli, F , de dimensiune (MxN).
@@ -18,27 +24,13 @@ unde
 
 multimea de indici este
 
-Ind [3,3] ={ (-1,-1), (-1,0), (-1,1), (0,-1), (0,0), (-0,1), (1,-1), (1,0), (1,1)}
+`Ind [3,3] ={ (-1,-1), (-1,0), (-1,1), (0,-1), (0,0), (-0,1), (1,-1), (1,0), (1,1)}`
 
 #### Actualizarea unui pixel de pe pozitia (i,j)
 
-v[i,j] =
+`v[i,j] =[i,j] *1/9+ f[i-1,j]* 1/9+ f[i,j-1]* 1/9+ f[i-1,j-1]* 1/9+ f[i+1,j]* 1/9+ f[i,j+1]* 1/9+ f[i+1,j+1]* 1/9`
 
-f[i,j] *1/9+
-
-f[i-1,j]* 1/9+
-
-f[i,j-1]* 1/9+
-
-f[i-1,j-1]* 1/9+
-
-f[i+1,j]* 1/9+
-
-f[i,j+1]* 1/9+
-
-f[i+1,j+1]* 1/9
-
-Pentru frontiere se considera ca un element este egal cu elemental din celula vecina din matrice f[-1,-1]= f[0,0]; f[-1,j]= f[0,j]; f[i,-1]=f[i,0]; f[M,j]= f[M-1,j]; f[i,N]=f[i,N-1];
+Pentru frontiere se considera ca un element este egal cu elemental din celula vecina din matrice `f[-1,-1]= f[0,0]; f[-1,j]= f[0,j]; f[i,-1]=f[i,0]; f[M,j]= f[M-1,j]; f[i,N]=f[i,N-1];`
 
 Se cere asigurarea urmatoarei postconditii:
 
@@ -90,14 +82,21 @@ Testare: masurati timpul de executie pentru
 
 Rezultatele acestor teste trebuie sa fie reflectate in documentatie in tabel
 
-## Implementare
-- citest matricea din fisier
+---
+
+## Detalii Implementare
+- se citeste matricea din fisier
 - fiecare thread va primi un interval de linii, de xemplu T1: 0-100, T2: 101-200, T3: 201-300, T4: 301-400
+  - aceasta varianta este eficienta cat timp numarul de linii este mai mare decat numarul de threaduri
 - fiecare thread va calcula rezultatul pentru intervalul sau
 - rezultatul va fi scris intr-o matrice noua
 - matricea noua va fi comparata cu matricia obtinuta din programul secvential
+- complexitate spatiu: O(2 * N * M)
+- bordarea matricii a fost realizata prin adaugarea unor conditii in for-uri
 
-## 1 Java
+## Experimente
+
+### 1. Java
 ### Matrice 10x10 cu kernel 3x3
 ![img.png](img.png)
 - Pentru o marice de dimensiuni mici timpul de executie creste cu cat adaugam mai multe threaduri
@@ -119,22 +118,54 @@ Rezultatele acestor teste trebuie sa fie reflectate in documentatie in tabel
 
 - - - 
 
-C++ alocare statica
+### 2. C++ alocare statica
 
 ### Matrice 10x10 cu kernel 3x3
-![c_static_10x10_3.png.png](c_static_10x10_3.png)
+![c_static_10x10_3.png](c_static_10x10_3.png)
 - Nu avem o imbunatatire in timpul de executie daca mai adaugam theaduri
 
 ### Matrice 1000x1000 cu kernel 5x5
-![c_static_1000x1000_5.png.png](c_static_1000x1000_5.png)
+![c_static_1000x1000_5.png](c_static_1000x1000_5.png)
 - Observam o imbunatatire in timpul de executie cand crestem numarul de threaduri
 - Aceasta imbunatatire este valabila doar pana la un nr de 4 threaduri, dupa timpul de executie incepe sa creasca
 
 ### Matrice 10x1000 cu kernel 5x5
-![c_static_10x1000_5.png.png](c_static_10x1000_5.png)
+![c_static_10x1000_5.png](c_static_10x1000_5.png)
 - Timpul de executie scade daca folosim 2 sau 4 threaduri, dar daca folosim mai multe incepe sa creasca iar
 
 ### Matrice 1000x10 cu kernel 5x5
-![c_static_1000x10_5.png.png](c_static_1000x10_5.png)
+![c_static_1000x10_5.png](c_static_1000x10_5.png)
 - Timpul de executie nu se imbunatateste daca mai adaugam theaduri
 - Din potriva timpul de executie creste foarte mult pentru 2 threaduri
+
+- - -
+
+### 3. C++ alocare dinamica
+
+### Matrice 10x10 cu kernel 3x3
+![c_dinamic_10x10_3.png.png](c_dinamic_10x10_3.png)
+- Timpul de executie nu se imbunatateste daca mai adaugam theaduri
+
+### Matrice 1000x1000 cu kernel 5x5
+![c_dinamic_1000x1000_5.png.png](c_dinamic_1000x1000_5.png)
+- Timpul de executie se imbunatateste daca mai adaugam theaduri
+- Aceasta imbunatatire este valabila doar pana la un nr de 8 threaduri, dupa timpul de executie ramane constant
+
+### Matrice 10x1000 cu kernel 5x5
+![c_dinamic_10x1000_5.png.png](c_dinamic_10x1000_5.png)
+- Timpul de executie scade daca folosim 2 sau 4 threaduri, dar daca folosim mai multe incepe sa creasca iar
+
+### Matrice 1000x10 cu kernel 5x5
+![c_dinamic_1000x10_5.png.png](c_dinamic_10x1000_5.png)
+- Timpul de executie scade daca folosim 2 sau 4 threaduri, dar daca folosim mai multe incepe sa creasca iar
+- Observam performanta nu este influentata de forma matricei 10x1000 sau 1000x10
+
+---
+
+## Concluzii
+- Pentru matrici mici, timpul de executie creste cu cat adaugam mai multe threaduri
+- Pentru matrici mari, timpul de executie scade cu cat adaugam mai multe threaduri
+- Aceasta imbunatatire este valabila doar pana la un nr de 2-4 threaduri, dupa timpul de executie nu se mai imbunatateste semnificativ, iar in unele situatii chiar se inrautateste
+- Alocarea dinamica a matricilor nu are niciun efect asupra timpului de executie
+- Timpul de executie e mai bun in C++ decat in Java
+---
