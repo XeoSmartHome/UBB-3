@@ -94,8 +94,8 @@ public class Main {
             Scanner scanner = new Scanner(fileReader);
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < m; j++) {
-                    if (Math.abs(scanner.nextDouble() - matrix[i][j]) > 1e-6) {
-                        return true;
+                    if (Math.abs(scanner.nextDouble() - matrix[i][j]) > 1e+6) {
+                        return false;
                     }
                 }
             }

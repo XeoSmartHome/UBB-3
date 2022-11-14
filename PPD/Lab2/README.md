@@ -52,7 +52,13 @@ Comparati timpii obtinuti cu implementarea Java versus implementarea C++.
 Evaluati complexitatea-spatiu.
 
 ### Varianta utilizata: 1B
+#### Avantaje
+- Complexitate redusa, o singura bariere folosita pentru sincronizare
+- Dupa ce au trecut de partea de copiere in bufere, threadurile nu mai asteapta la bariere, ci se ocupa de partea de calcul
 
+#### Dezavantaje
+- Toate threadurile trebuie sa astepte ca toate threadurile sa ajunga la bariere, astfel ca se pierde timp
+- Consum de memorie mai ridicat, nu e nevoie sa retinem dimensiuneKerlel * m elemente pentru fiecare thread
 
 ### Detalii implementare
 - se foloseste un fisier de intrare pentru a citi matricea si kernelul
