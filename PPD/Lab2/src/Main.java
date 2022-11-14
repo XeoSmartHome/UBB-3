@@ -15,8 +15,8 @@ public class Main {
     private static int threadCount;
 
     public static void main(String[] args) {
-        String fileName = "input_3_10_10.txt";
-        threadCount = 8;
+        String fileName = args[0];
+        threadCount = Integer.parseInt(args[1]);
 
         try {
             readInputMatrix(fileName);
@@ -30,12 +30,13 @@ public class Main {
         long end = nanoTime();
         double executionTime = (end - start) / 1e6;
 
-        printMatrix(matrix);
+//        printMatrix(matrix);
         if (!checkOutputMatrix(fileName)) {
             System.out.println("Wrong result");
             return;
         }
 
+        System.out.println("Execution time: " + executionTime + "ms");
         System.out.println(executionTime);
     }
 
@@ -94,8 +95,7 @@ public class Main {
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < m; j++) {
                     if (Math.abs(scanner.nextDouble() - matrix[i][j]) > 1e-6) {
-                        System.out.println("i = " + i + ", j = " + j);
-                        return false;
+                        return true;
                     }
                 }
             }
