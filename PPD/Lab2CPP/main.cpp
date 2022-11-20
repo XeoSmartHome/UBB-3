@@ -50,7 +50,7 @@ bool checkResult(const string &filename) {
         for (int j = 0; j < m; j++) {
             double expected;
             inputFile >> expected;
-            if (matrix[i][j] - expected > 1e+6) {
+            if (matrix[i][j] - expected > 1e-6) {
                 return false;
             }
         }

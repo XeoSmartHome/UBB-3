@@ -1,5 +1,5 @@
 # Laborator 2
-## Neamtu Claudiu - 235
+## Neamtu Claudiu - 235/1
 
 ---
 
@@ -58,7 +58,7 @@ Evaluati complexitatea-spatiu.
 
 #### Dezavantaje
 - Toate threadurile trebuie sa astepte ca toate threadurile sa ajunga la bariere, astfel ca se pierde timp
-- Consum de memorie mai ridicat, nu e nevoie sa retinem dimensiuneKerlel * m elemente pentru fiecare thread
+- Consum de memorie mai ridicat, nu e nevoie sa retinem intreaga linie curenta in buffer pentru ca putem retine doar cateva elemente din ea
 
 ### Detalii implementare
 - se foloseste un fisier de intrare pentru a citi matricea si kernelul
@@ -79,7 +79,7 @@ Evaluati complexitatea-spatiu.
 ### Complexitate spatiu:
 - pe langa matricea initiala de dimenziune n x m, pentru fiecare thread se aloca 2 bufere de dimensiune [dimendiuneKernel / 2 + 1], respoectiv [dimensiuneKernel / 2] pentru a retine elementele de pe marginea matricei 
 
-`O(nrTheaduri * m * dimensiuneKernel)`
+`O(n * m + nrTheaduri * m * dimensiuneKernel)`
 
 
 ## Grafice
@@ -100,4 +100,3 @@ Evaluati complexitatea-spatiu.
 - Pentru matrici mici observam ca adaugarea de theaduri suplimentare creste timpul de executie
 - Aceasta crestere este mult mai vizibila in Java decat in C++
 - Toate testele au aratat ca C++ este mai rapid decat Java
-- 
