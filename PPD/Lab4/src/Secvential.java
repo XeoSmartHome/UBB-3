@@ -1,20 +1,33 @@
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Secvential {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
+        String folderPath = "data/caz1";
+
+        long startTime = System.nanoTime();
         MonomialsList monomialsList = new MonomialsList();
+        File folder = new File(folderPath);
 
-        FileReader fileReader = new FileReader("data/caz1/polynomial0.txt");
-        Scanner scanner = new Scanner(fileReader);
+        for (File file : Objects.requireNonNull(folder.listFiles())) {
+            FileReader fileReader = new FileReader(file);
+            Scanner scanner = new Scanner(fileReader);
 
-        while (scanner.hasNext()) {
-            int coefficient = scanner.nextInt();
-            int exponent = scanner.nextInt();
-            monomialsList.add(new Monomial(coefficient, exponent));
-            monomialsList.print();
+            while (scanner.hasNext()) {
+                int coefficient = scanner.nextInt();
+                int exponent = scanner.nextInt();
+                monomialsList.add(new Monomial(coefficient, exponent));
+            }
         }
 
+        FileWriter fileWriter = new FileWriter("output/" + folderPath.replace("data/", "") + ".txt");
+        for (Monomial monomial : monomialsList.getAsList()) {
+            fileWriter.write(monomial.coefficient + " " + monomial.exponent + "\n");
+        }
+        fileWriter.close();
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration);
     }
 }
