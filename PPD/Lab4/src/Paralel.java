@@ -2,59 +2,40 @@ import java.io.*;
 import java.util.*;
 
 public class Paralel {
-    static class MyThread extends Thread {
-
-        private Queue<Monomial> monomialsQueue;
-        private MonomialsList monomialsList;
-        private int totalMonomials;
-        private int addedMonomials;
-        private boolean readingFinished;
-
-        MyThread(Queue<Monomial> monomialsQueue, MonomialsList monomialsList, int totalMonomials, int addedMonomials, boolean readingFinished) {
-            this.monomialsQueue = monomialsQueue;
-            this.monomialsList = monomialsList;
-            this.totalMonomials = totalMonomials;
-            this.addedMonomials = addedMonomials;
-            this.readingFinished = readingFinished;
-        }
-
-        private synchronized Monomial getNextMonomial() {
-            return monomialsQueue.poll();
-        }
-
-        private synchronized void addMonomial(Monomial monomial) {
-            monomialsList.add(monomial);
-        }
-
-        @Override
-        public void run() {
-            System.out.println("running...");
-            while (true) {
-                Monomial monomial = getNextMonomial();
-                if (monomial == null) {
-                    break;
-                }
-                addMonomial(monomial);
-            }
-
-        }
-    }
 
     public static void main(String[] args) throws IOException {
-        String folderPath = "data/caz1";
-        int numberOfThreads = 4;
+        String folderPath = "data/caz2";
+        int numberOfThreads = 2;
 
         long startTime = System.nanoTime();
         MonomialsList monomialsList = new MonomialsList();
         Queue<Monomial> monomialsQueue = new LinkedList<>();
 
-        int totalMonomials = 0;
-        int addedMonomials = 0;
-        boolean readingFinished = false;
+        final int[] readingFinished = {0};
 
         Thread[] threads = new Thread[numberOfThreads];
         for (int i = 0; i < numberOfThreads; i++) {
-            threads[i] = new MyThread(monomialsQueue, monomialsList, totalMonomials, addedMonomials, readingFinished);
+            threads[i] = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        Monomial monomial = null;
+                        synchronized (monomialsQueue) {
+                            if (!monomialsQueue.isEmpty()) {
+                                monomial = monomialsQueue.poll();
+                            }
+                        }
+                        if (monomial != null) {
+                            synchronized (monomialsList) {
+                                monomialsList.add(monomial);
+                            }
+                        }
+                        if (readingFinished[0] == 1 && monomialsQueue.isEmpty()) {
+                            break;
+                        }
+                    }
+                }
+            });
             threads[i].start();
         }
 
@@ -68,10 +49,12 @@ public class Paralel {
                 int coefficient = scanner.nextInt();
                 int exponent = scanner.nextInt();
 
-                totalMonomials++;
-                monomialsQueue.add(new Monomial(coefficient, exponent));
+                synchronized (monomialsQueue) {
+                    monomialsQueue.add(new Monomial(coefficient, exponent));
+                }
             }
         }
+        readingFinished[0] = 1;
 
         for (int i = 0; i < numberOfThreads; i++) {
             try {
