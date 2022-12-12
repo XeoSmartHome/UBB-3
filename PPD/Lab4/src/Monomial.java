@@ -8,4 +8,8 @@ public class Monomial {
     public int exponent;
     public Monomial previous = null;
     public Monomial next = null;
+
+    public String toString() {
+        return coefficient + " " + exponent;
+    }
 }
