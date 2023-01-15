@@ -1,5 +1,5 @@
 
-$executable = "java --classpath C:\UBB\PPD\Lab2\out\production\Lab2 Main"
+#$executable = "java -classpath C:\UBB\PPD\Lab4\out\production\Lab4 Secvential"
 
 $executable = $args[0]
 $inputFile = $args[1]
@@ -16,7 +16,7 @@ $sum = 0
 
 for ($i = 0; $i -lt $numberOfExecutions; $i++) {
     Write-Host "Starting execution $i"
-    $output = & java -classpath out\production\Lab2 $executable $inputFile $numerOfThreads
+    $output = & java -classpath C:\UBB\PPD\Lab4\out\production\Lab4 $executable $inputFile $numerOfThreads
     Write-Host $output "ok"
     $duration = $output[$output.length - 1]
     Write-Host $duration

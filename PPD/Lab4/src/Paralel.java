@@ -4,8 +4,9 @@ import java.util.*;
 public class Paralel {
 
     public static void main(String[] args) throws IOException {
-        String folderPath = "data/caz2";
-        int numberOfThreads = 2;
+        String folderPath = "data/" + args[0];
+        int numberOfThreads = Integer.parseInt(args[1]);
+        System.out.println("Number of threads: " + numberOfThreads);
 
         long startTime = System.nanoTime();
         MonomialsList monomialsList = new MonomialsList();

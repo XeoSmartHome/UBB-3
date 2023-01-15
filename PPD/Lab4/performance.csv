@@ -1,0 +1,15 @@
+Tip Matrice,Nr threads,Timp executie
+// serial
+caz1,1,51210240
+caz2,1,52715010
+// parallel
+caz1,1,46918650
+caz1,2,47162600
+caz1,4,50536230
+caz1,8,53425240
+caz1,16,61000520
+caz2,1,45880240
+caz2,2,47659820
+caz2,4,48951340
+caz2,8,55055050
+caz2,16,63363820

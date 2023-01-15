@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Secvential {
     public static void main(String[] args) throws IOException {
-        String folderPath = "data/caz1";
+        String folderPath = "data/caz2";
 
         long startTime = System.nanoTime();
         MonomialsList monomialsList = new MonomialsList();

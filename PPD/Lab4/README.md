@@ -81,8 +81,74 @@ Analiza: raport Tsecvential/Tparalel
 
 ### Implementare
 
-#### Varianta seriala
-
 #### Varianta secventiala
 
+- se citeste cate un monom din fisier si se adauga in lista de monoame
+- se scrie in fisierul rezultat lista de monoame
+
+#### Varianta paralela
+
+- se porneste un thread care citeste cate un monom din fisier si il adauga intr-o coada
+- se pornesc p threaduri care preia cate un monom din coada si il adauga in lista de monoame
+- lista de monoame este sincronizata la nivel de lista
+- lista de monoame si coada sunt blocate cand un thread le acceseaza
+- se foloseste o variabila pentru a anunta daca s-a terminat de citit din fisier
+- daca s-a terminat de citit din fisier si coada este goala, threadurile worker se opresc
+- se asteapta ca toate threadurile sa termine
+- se scrie in fisierul rezultat lista de monoame
+
 ### Performanta
+
+#### Timp de executie secvential
+
+| Caz  	| Numar threaduri 	| Timp executie (ns) 	|
+|------	|-----------------	|--------------------	|
+| caz1 	| 1               	| 51210240           	|
+| caz2 	| 1               	| 52715010           	|
+
+#### Timp executie paralel
+| Caz  	| Numar threaduri 	| Timp executie (ns) 	|
+|------	|-----------------	|--------------------	|
+| caz1 	| 1               	| 46918650           	|
+| caz1 	| 2               	| 47162600           	|
+| caz1 	| 4               	| 50536230           	|
+| caz1 	| 8               	| 53425240           	|
+| caz1 	| 16              	| 61000520           	|
+| caz2 	| 1               	| 45880240           	|
+| caz2 	| 2               	| 47659820           	|
+| caz2 	| 4               	| 48951340           	|
+| caz2 	| 8               	| 55055050           	|
+| caz2 	| 16              	| 63363820           	|
+
+
+#### 10 polinoame cu gradul maxim 1000 si cu maxim 50 monoame
+
+![](Screenshot_4.png)
+
+---
+
+#### 5 polinoame cu gradul maxim 10000 si cu maxim 100 monoame
+
+![](Screenshot_5.png)
+
+---
+
+### Observatii
+- pentru 1, 2 sau 4 threaduri, performanta este mai buna pentru varianta paralela decat pentru varianta secventiala
+- pentru mai mult de 4 threaduri, performanta este mai rea pentru varianta paralela decat pentru varianta secventiala
+
+### Tsecvential/Tparalel caz 1 
+
+- Tsecvential/Tparalel (1 thread) = 1.09146874431
+- Tsecvential/Tparalel (2 thread) = 1.08582308863
+- Tsecvential/Tparalel (4 thread) = 1.01333716425
+- Tsecvential/Tparalel (8 thread) = 0.9585401956
+- Tsecvential/Tparalel (16 thread) = 0.83950497471
+
+### Tsecvential/Tparalel caz 2
+
+- Tsecvential/Tparalel (1 thread) = 1.14896979615
+- Tsecvential/Tparalel (2 thread) = 1.08582308863
+- Tsecvential/Tparalel (4 thread) = 1.07688594429
+- Tsecvential/Tparalel (8 thread) = 0.95749636046
+- Tsecvential/Tparalel (16 thread) = 0.83194179265
