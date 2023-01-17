@@ -1,16 +1,54 @@
-     1                                  bits 32
-     2                                  global main
-     3                                  extern exit
-     4                                  extern printf
-     5                                  extern scanf
-     6                                  
-     7                                  segment data use32 class=data
-     8 00000000 25640A00                mesaj db '%d', 10, 0
-     9 00000004 256400                  format db '%d',0
-    10 00000007 0000                    a dw 0
-    11                                  
-    12                                  segment code use32 class=code
-    13                                  main:
-    14 00000000 B800000000              mov eax, 0
-    15 00000005 6A00                    push dword 0
-    16 00000007 E8(00000000)            call exit
+     1                                  bits 64
+     2                                  default rel
+     3                                  global main
+     4                                  extern exit
+     5                                  extern printf
+     6                                  extern scanf
+     7                                  
+     8                                  segment data use32 class=data
+     9 00000000 25640A00                mesaj db '%d', 10, 0
+    10 00000004 256400                  format db '%d',0
+    11 00000007 0000                    a dw 0
+    12 00000009 0000                    b dw 0
+    13 0000000B 0000                    c dw 0
+    14 0000000D 0000                    temp_3 dw 0
+    15 0000000F 0000                    temp_4 dw 0
+    16 00000011 0000                    temp_5 dw 0
+    17                                  
+    18                                  segment code use32 class=code
+    19                                  main:
+    20 00000000 B800000000              mov eax, 0
+    21                                  mov word [a], [3]
+    21          ******************       error: invalid combination of opcode and operands
+    22                                  mov word [b], [4]
+    22          ******************       error: invalid combination of opcode and operands
+    23 00000005 66B80500                mov ax, 5
+    24 00000009 6683C006                add ax, 6
+    25                                  mov word temp_3, ax
+    25          ******************       error: invalid combination of opcode and operands
+    26 0000000D 66B8[0900]              mov ax, b
+    27 00000011 6605[0D00]              add ax, temp_3
+    28                                  mov b, ax
+    28          ******************       error: invalid combination of opcode and operands
+    29 00000015 66B8[0700]              mov ax, a
+    30 00000019 6605[0900]              add ax, b
+    31                                  mov a, ax
+    31          ******************       error: invalid combination of opcode and operands
+    32                                  mov word [c], [a]
+    32          ******************       error: invalid combination of opcode and operands
+    33 0000001D 66B80900                mov ax, 9
+    34 00000021 66BB[0700]              mov bx, a
+    35 00000025 66F7F3                  div bx
+    36 00000028 66B80500                mov ax, 5
+    37 0000002C 66BB[0F00]              mov bx, temp_4
+    38 00000030 66F7E3                  mul bx
+    39                                  mov word [b], [temp_5]
+    39          ******************       error: invalid combination of opcode and operands
+    40 00000033 FF35(07000000)          push qword [a] 
+    41 00000039 68[00000000]            push qword mesaj
+    42 0000003E E8(00000000)            call printf
+    43 00000043 FF35(09000000)          push qword [b] 
+    44 00000049 68[00000000]            push qword mesaj
+    45 0000004E E8(00000000)            call printf
+    46 00000053 6A00                    push dword 0
+    47 00000055 E8(00000000)            call exit

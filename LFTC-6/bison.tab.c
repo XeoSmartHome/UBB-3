@@ -90,12 +90,15 @@
 
 	char buffer[1000];
 	char variablesNames[100][64];
+	int variablesCount = 0;
+	char tempVar[64];
 
+	void addCode(char *code);
 	void addVariable(char *name);
 
 
 /* Line 189 of yacc.c  */
-#line 99 "bison.tab.c"
+#line 102 "bison.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -131,7 +134,12 @@
      TIMES = 264,
      DIVIDE = 265,
      EQUAL = 266,
-     OTHER = 267
+     OTHER = 267,
+     SCAN = 268,
+     FMT_PRINTLN = 269,
+     LPAREN = 270,
+     RPAREN = 271,
+     AMP = 272
    };
 #endif
 
@@ -142,7 +150,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 26 "bison.y"
+#line 29 "bison.y"
 
 	int value;
 	char name[64];
@@ -150,7 +158,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 154 "bison.tab.c"
+#line 162 "bison.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -162,7 +170,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 166 "bison.tab.c"
+#line 174 "bison.tab.c"
 
 #ifdef short
 # undef short
@@ -375,22 +383,22 @@ union yyalloc
 #endif
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  10
+#define YYFINAL  16
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   12
+#define YYLAST   24
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  13
+#define YYNTOKENS  18
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  8
+#define YYNNTS  10
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  13
+#define YYNRULES  19
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  21
+#define YYNSTATES  35
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   267
+#define YYMAXUTOK   272
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -424,7 +432,8 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    12
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
+      15,    16,    17
 };
 
 #if YYDEBUG
@@ -432,24 +441,26 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     5,     8,    10,    12,    14,    18,    22,
-      26,    30,    32,    34
+       0,     0,     3,     5,     8,    10,    12,    14,    16,    18,
+      22,    27,    32,    36,    40,    44,    48,    52,    54,    56
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      14,     0,    -1,    15,    -1,    16,    15,    -1,    16,    -1,
-      18,    -1,    17,    -1,     5,     3,     6,    -1,     3,    11,
-      19,    -1,    19,     7,    20,    -1,    19,     8,    20,    -1,
-      20,    -1,     3,    -1,     4,    -1
+      19,     0,    -1,    20,    -1,    21,    20,    -1,    21,    -1,
+      25,    -1,    22,    -1,    23,    -1,    24,    -1,     5,     3,
+       6,    -1,    14,    15,    26,    16,    -1,    13,    15,     3,
+      16,    -1,     3,    11,    26,    -1,    27,     7,    26,    -1,
+      27,     8,    26,    -1,    27,     9,    26,    -1,    27,    10,
+      26,    -1,    27,    -1,     3,    -1,     4,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    46,    46,    47,    48,    49,    50,    52,    56,    57,
-      58,    59,    60,    63
+       0,    55,    55,    56,    57,    58,    59,    60,    61,    63,
+      67,    77,    87,    93,   127,   160,   195,   230,   231,   235
 };
 #endif
 
@@ -459,8 +470,9 @@ static const yytype_uint8 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "ID", "CONST", "VAR", "INT", "PLUS",
-  "MINUS", "TIMES", "DIVIDE", "EQUAL", "OTHER", "$accept", "program",
-  "instruction_list", "instruction", "declaration", "assignment",
+  "MINUS", "TIMES", "DIVIDE", "EQUAL", "OTHER", "SCAN", "FMT_PRINTLN",
+  "LPAREN", "RPAREN", "AMP", "$accept", "program", "instruction_list",
+  "instruction", "declaration", "print", "read", "assignment",
   "expression", "term", 0
 };
 #endif
@@ -471,22 +483,22 @@ static const char *const yytname[] =
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267
+     265,   266,   267,   268,   269,   270,   271,   272
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    13,    14,    15,    15,    16,    16,    17,    18,    19,
-      19,    19,    20,    20
+       0,    18,    19,    20,    20,    21,    21,    21,    21,    22,
+      23,    24,    25,    26,    26,    26,    26,    26,    27,    27
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     1,     2,     1,     1,     1,     3,     3,     3,
-       3,     1,     1,     1
+       0,     2,     1,     2,     1,     1,     1,     1,     1,     3,
+       4,     4,     3,     3,     3,     3,     3,     1,     1,     1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -494,31 +506,33 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     0,     0,     2,     4,     6,     5,     0,     0,
-       1,     3,    12,    13,     8,    11,     7,     0,     0,     9,
-      10
+       0,     0,     0,     0,     0,     0,     2,     4,     6,     7,
+       8,     5,     0,     0,     0,     0,     1,     3,    18,    19,
+      12,    17,     9,     0,     0,     0,     0,     0,     0,    11,
+      10,    13,    14,    15,    16
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     3,     4,     5,     6,     7,    14,    15
+      -1,     5,     6,     7,     8,     9,    10,    11,    20,    21
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -11
+#define YYPACT_NINF -16
 static const yytype_int8 yypact[] =
 {
-      -3,    -1,     6,     1,   -11,    -3,   -11,   -11,     0,     5,
-     -11,   -11,   -11,   -11,    -2,   -11,   -11,     0,     0,   -11,
-     -11
+       1,    -8,     2,    -7,    -6,     7,   -16,     1,   -16,   -16,
+     -16,   -16,    -2,    14,    18,    -2,   -16,   -16,   -16,   -16,
+     -16,     9,   -16,     6,     8,    -2,    -2,    -2,    -2,   -16,
+     -16,   -16,   -16,   -16,   -16
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -11,   -11,     7,   -11,   -11,   -11,   -11,   -10
+     -16,   -16,    16,   -16,   -16,   -16,   -16,   -16,   -15,   -16
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -528,23 +542,26 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-       1,    10,     2,    12,    13,    17,    18,    19,    20,     9,
-       8,    16,    11
+      24,    18,    19,    12,     1,    13,     2,    16,    14,    15,
+      31,    32,    33,    34,     3,     4,    25,    26,    27,    28,
+      22,    23,    29,    17,    30
 };
 
 static const yytype_uint8 yycheck[] =
 {
-       3,     0,     5,     3,     4,     7,     8,    17,    18,     3,
-      11,     6,     5
+      15,     3,     4,    11,     3,     3,     5,     0,    15,    15,
+      25,    26,    27,    28,    13,    14,     7,     8,     9,    10,
+       6,     3,    16,     7,    16
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     3,     5,    14,    15,    16,    17,    18,    11,     3,
-       0,    15,     3,     4,    19,    20,     6,     7,     8,    20,
-      20
+       0,     3,     5,    13,    14,    19,    20,    21,    22,    23,
+      24,    25,    11,     3,    15,    15,     0,    20,     3,     4,
+      26,    27,     6,     3,    26,     7,     8,     9,    10,    16,
+      16,    26,    26,    26,    26
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1355,37 +1372,241 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 7:
+        case 9:
 
 /* Line 1455 of yacc.c  */
-#line 52 "bison.y"
+#line 63 "bison.y"
     {
 		addVariable((yyvsp[(2) - (3)].name));
 	;}
     break;
 
+  case 10:
+
+/* Line 1455 of yacc.c  */
+#line 67 "bison.y"
+    {
+		printf("print %s\n", (yyvsp[(3) - (4)].name));
+		sprintf(buffer, "push qword %s ", (yyvsp[(3) - (4)].name));
+		addCode(buffer);
+		sprintf(buffer, "push qword mesaj");
+		addCode(buffer);
+		sprintf(buffer, "call printf");
+		addCode(buffer);
+	;}
+    break;
+
+  case 11:
+
+/* Line 1455 of yacc.c  */
+#line 77 "bison.y"
+    {
+		printf("read %s\n", (yyvsp[(3) - (4)].name));
+		sprintf(buffer, "push qword %s", (yyvsp[(3) - (4)].name));
+		addCode(buffer);
+		sprintf(buffer, "push qword mesaj");
+		addCode(buffer);
+		sprintf(buffer, "call scanf");
+		addCode(buffer);
+;}
+    break;
+
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 60 "bison.y"
+#line 87 "bison.y"
     {
-
+		printf("assignment: %s = %s\n", (yyvsp[(1) - (3)].name), (yyvsp[(3) - (3)].name));
+		sprintf(buffer, "mov word %s, %s", (yyvsp[(1) - (3)].name), (yyvsp[(3) - (3)].name));
+		addCode(buffer);
 	;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 63 "bison.y"
+#line 93 "bison.y"
     {
+		printf("expression: %s + %s\n", (yyvsp[(1) - (3)].name), (yyvsp[(3) - (3)].name));
 
+		// check if $1 is a variable
+		int isVariable = 0;
+		int i;
+		for (i = 0; i < variablesCount; i++) {
+			if (strcmp(variablesNames[i], (yyvsp[(1) - (3)].name)) == 0) {
+				isVariable = 1;
+			}
+		}
+
+		if(!isVariable) {
+			sprintf(tempVar, "temp_%d", variablesCount);
+			addVariable(tempVar);
+
+			sprintf(buffer, "mov ax, %s", (yyvsp[(1) - (3)].name));
+			addCode(buffer);
+			sprintf(buffer, "add ax, %s", (yyvsp[(3) - (3)].name));
+			addCode(buffer);
+			sprintf(buffer, "mov word %s, ax", tempVar);
+			addCode(buffer);
+
+			strcpy((yyval.name), tempVar);
+		} else {
+			sprintf(buffer, "mov ax, %s", (yyvsp[(1) - (3)].name));
+                        addCode(buffer);
+                        sprintf(buffer, "add ax, %s", (yyvsp[(3) - (3)].name));
+                        addCode(buffer);
+                        sprintf(buffer, "mov %s, ax", (yyvsp[(1) - (3)].name));
+                        addCode(buffer);
+		}
+
+	;}
+    break;
+
+  case 14:
+
+/* Line 1455 of yacc.c  */
+#line 127 "bison.y"
+    {
+		printf("expression: %s - %s\n", (yyvsp[(1) - (3)].name), (yyvsp[(3) - (3)].name));
+
+		// check if $1 is a variable
+		int isVariable = 0;
+		int i;
+		for (i = 0; i < variablesCount; i++) {
+			if (strcmp(variablesNames[i], (yyvsp[(1) - (3)].name)) == 0) {
+				isVariable = 1;
+			}
+		}
+
+		if(!isVariable) {
+			sprintf(tempVar, "temp_%d", variablesCount);
+			addVariable(tempVar);
+
+			sprintf(buffer, "mov ax, %s", (yyvsp[(1) - (3)].name));
+			addCode(buffer);
+			sprintf(buffer, "sub ax, %s", (yyvsp[(3) - (3)].name));
+			addCode(buffer);
+			sprintf(buffer, "mov word %s, ax", tempVar);
+			addCode(buffer);
+
+			strcpy((yyval.name), tempVar);
+		} else {
+			sprintf(buffer, "mov ax, %s", (yyvsp[(1) - (3)].name));
+                        addCode(buffer);
+                        sprintf(buffer, "sub ax, %s", (yyvsp[(3) - (3)].name));
+                        addCode(buffer);
+                        sprintf(buffer, "mov %s, ax", (yyvsp[(1) - (3)].name));
+                        addCode(buffer);
+		}
+	;}
+    break;
+
+  case 15:
+
+/* Line 1455 of yacc.c  */
+#line 160 "bison.y"
+    {
+		printf("expression: %s * %s\n", (yyvsp[(1) - (3)].name), (yyvsp[(3) - (3)].name));
+
+		// check if $1 is a variable
+		int isVariable = 0;
+		int i;
+		for (i = 0; i < variablesCount; i++) {
+			if (strcmp(variablesNames[i], (yyvsp[(1) - (3)].name)) == 0) {
+				isVariable = 1;
+			}
+		}
+
+		if(!isVariable) {
+			sprintf(tempVar, "temp_%d", variablesCount);
+			addVariable(tempVar);
+
+			sprintf(buffer, "mov ax, %s", (yyvsp[(1) - (3)].name));
+			addCode(buffer);
+			sprintf(buffer, "mov bx, %s", (yyvsp[(3) - (3)].name));
+			addCode(buffer);
+			sprintf(buffer, "mul bx");
+			addCode(buffer);
+			sprintf(buffer, "mov word %s, ax", tempVar);
+
+			strcpy((yyval.name), tempVar);
+		} else {
+			sprintf(buffer, "mov ax, %s", (yyvsp[(1) - (3)].name));
+                        addCode(buffer);
+                        sprintf(buffer, "mov bx, %s", (yyvsp[(3) - (3)].name));
+                        addCode(buffer);
+                        sprintf(buffer, "mul bx");
+                        addCode(buffer);
+                        sprintf(buffer, "mov %s, ax", (yyvsp[(1) - (3)].name));
+		}
+	;}
+    break;
+
+  case 16:
+
+/* Line 1455 of yacc.c  */
+#line 195 "bison.y"
+    {
+		printf("expression: %s / %s\n", (yyvsp[(1) - (3)].name), (yyvsp[(3) - (3)].name));
+
+		// check if $1 is a variable
+		int isVariable = 0;
+		int i;
+		for (i = 0; i < variablesCount; i++) {
+			if (strcmp(variablesNames[i], (yyvsp[(1) - (3)].name)) == 0) {
+				isVariable = 1;
+			}
+		}
+
+		if(!isVariable) {
+			sprintf(tempVar, "temp_%d", variablesCount);
+			addVariable(tempVar);
+
+			sprintf(buffer, "mov ax, %s", (yyvsp[(1) - (3)].name));
+			addCode(buffer);
+			sprintf(buffer, "mov bx, %s", (yyvsp[(3) - (3)].name));
+			addCode(buffer);
+			sprintf(buffer, "div bx");
+			addCode(buffer);
+			sprintf(buffer, "mov word [%s], ax", tempVar);
+
+			strcpy((yyval.name), tempVar);
+		} else {
+			sprintf(buffer, "mov ax, %s", (yyvsp[(1) - (3)].name));
+                        addCode(buffer);
+                        sprintf(buffer, "mov bx, %s", (yyvsp[(3) - (3)].name));
+                        addCode(buffer);
+                        sprintf(buffer, "div bx");
+                        addCode(buffer);
+                        sprintf(buffer, "mov %s, ax", (yyvsp[(1) - (3)].name));
+		}
+	;}
+    break;
+
+  case 18:
+
+/* Line 1455 of yacc.c  */
+#line 231 "bison.y"
+    {
+		printf("term id %s\n", (yyvsp[(1) - (1)].name));
+		strcpy((yyval.name), (yyvsp[(1) - (1)].name));
+	;}
+    break;
+
+  case 19:
+
+/* Line 1455 of yacc.c  */
+#line 235 "bison.y"
+    {
+		printf("term const %s\n", (yyvsp[(1) - (1)].name));
+		strcpy((yyval.name), (yyvsp[(1) - (1)].name));
 	;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1389 "bison.tab.c"
+#line 1610 "bison.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1597,17 +1818,30 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 67 "bison.y"
+#line 240 "bison.y"
 
 
 void addVariable(char *variableName) {
+
+	for (int i = 0; i < variablesCount; i++) {
+		if (strcmp(variablesNames[i], variableName) == 0) {
+			printf("Variable %s already exists\n", variableName);
+			return;
+		}
+	}
+
 	sprintf(buffer, "%s dw 0\n", variableName);
 	strcat(dataSegment, buffer);
+
+	// add variable name to variablesNames
+	strcpy(variablesNames[variablesCount], variableName);
+	variablesCount++;
 }
 
 void addCode(char *code) {
-    strcat(codeSegment, code);
-    codeSegmentIndex += strlen(code);
+	strcat(code, "\n");
+    	strcat(codeSegment, code);
+    	codeSegmentIndex += strlen(code);
 }
 
 void writeAsmFile(char *fileName) {
@@ -1615,7 +1849,7 @@ void writeAsmFile(char *fileName) {
 	sprintf(asmFileName, "%s.asm", fileName);
 	FILE *asmFile = fopen(asmFileName, "w");
 
-	fprintf(asmFile, "bits 32\nglobal main\nextern exit\nextern printf\nextern scanf\n");
+	fprintf(asmFile, "bits 64\ndefault rel\nglobal main\nextern exit\nextern printf\nextern scanf\n");
         fprintf(asmFile, "\nsegment data use32 class=data\n");
         fprintf(asmFile, "mesaj db \'%%d\', 10, 0\nformat db \'%%d\',0\n");
         fprintf(asmFile, "%s", dataSegment);

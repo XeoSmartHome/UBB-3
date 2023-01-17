@@ -19,7 +19,10 @@
 
 	char buffer[1000];
 	char variablesNames[100][64];
+	int variablesCount = 0;
+	char tempVar[64];
 
+	void addCode(char *code);
 	void addVariable(char *name);
 %}
 
@@ -38,8 +41,14 @@
 %token DIVIDE
 %token EQUAL
 %token OTHER
+%token SCAN
+%token FMT_PRINTLN
+%token LPAREN
+%token RPAREN
+%token AMP
 
 %type <name> term
+%type <name> expression
 
 %%
 
@@ -47,33 +56,210 @@ program: instruction_list;
 instruction_list: instruction instruction_list
 	| instruction;
 instruction: assignment
-	| declaration;
+	| declaration
+	| print
+	| read;
 
 declaration: VAR ID INT {
 		addVariable($2);
 	};
 
-assignment: ID EQUAL expression;
-expression: expression PLUS term
-	| expression MINUS term
-	| term;
-term: ID {
+print: FMT_PRINTLN LPAREN expression RPAREN {
+		printf("print %s\n", $3);
+		sprintf(buffer, "push qword %s ", $3);
+		addCode(buffer);
+		sprintf(buffer, "push qword mesaj");
+		addCode(buffer);
+		sprintf(buffer, "call printf");
+		addCode(buffer);
+	};
+
+read: SCAN LPAREN AMP ID RPAREN {
+		printf("read %s\n", $3);
+		sprintf(buffer, "push qword %s", $3);
+		addCode(buffer);
+		sprintf(buffer, "push qword mesaj");
+		addCode(buffer);
+		sprintf(buffer, "call scanf");
+		addCode(buffer);
+};
+
+assignment: ID EQUAL expression {
+		printf("assignment: %s = %s\n", $1, $3);
+		sprintf(buffer, "mov word %s, %s", $1, $3);
+		addCode(buffer);
+	};
+
+expression: term PLUS expression {
+		printf("expression: %s + %s\n", $1, $3);
+
+		// check if $1 is a variable
+		int isVariable = 0;
+		int i;
+		for (i = 0; i < variablesCount; i++) {
+			if (strcmp(variablesNames[i], $1) == 0) {
+				isVariable = 1;
+			}
+		}
+
+		if(!isVariable) {
+			sprintf(tempVar, "temp_%d", variablesCount);
+			addVariable(tempVar);
+
+			sprintf(buffer, "mov ax, %s", $1);
+			addCode(buffer);
+			sprintf(buffer, "add ax, %s", $3);
+			addCode(buffer);
+			sprintf(buffer, "mov word %s, ax", tempVar);
+			addCode(buffer);
+
+			strcpy($$, tempVar);
+		} else {
+			sprintf(buffer, "mov ax, %s", $1);
+                        addCode(buffer);
+                        sprintf(buffer, "add ax, %s", $3);
+                        addCode(buffer);
+                        sprintf(buffer, "mov %s, ax", $1);
+                        addCode(buffer);
+		}
 
 	}
-	| CONST {
+	| term MINUS expression {
+		printf("expression: %s - %s\n", $1, $3);
 
+		// check if $1 is a variable
+		int isVariable = 0;
+		int i;
+		for (i = 0; i < variablesCount; i++) {
+			if (strcmp(variablesNames[i], $1) == 0) {
+				isVariable = 1;
+			}
+		}
+
+		if(!isVariable) {
+			sprintf(tempVar, "temp_%d", variablesCount);
+			addVariable(tempVar);
+
+			sprintf(buffer, "mov ax, %s", $1);
+			addCode(buffer);
+			sprintf(buffer, "sub ax, %s", $3);
+			addCode(buffer);
+			sprintf(buffer, "mov word %s, ax", tempVar);
+			addCode(buffer);
+
+			strcpy($$, tempVar);
+		} else {
+			sprintf(buffer, "mov ax, %s", $1);
+                        addCode(buffer);
+                        sprintf(buffer, "sub ax, %s", $3);
+                        addCode(buffer);
+                        sprintf(buffer, "mov %s, ax", $1);
+                        addCode(buffer);
+		}
+	}
+	| term TIMES expression {
+		printf("expression: %s * %s\n", $1, $3);
+
+		// check if $1 is a variable
+		int isVariable = 0;
+		int i;
+		for (i = 0; i < variablesCount; i++) {
+			if (strcmp(variablesNames[i], $1) == 0) {
+				isVariable = 1;
+			}
+		}
+
+		if(!isVariable) {
+			sprintf(tempVar, "temp_%d", variablesCount);
+			addVariable(tempVar);
+
+			sprintf(buffer, "mov ax, %s", $1);
+			addCode(buffer);
+			sprintf(buffer, "mov bx, %s", $3);
+			addCode(buffer);
+			sprintf(buffer, "mul bx");
+			addCode(buffer);
+			sprintf(buffer, "mov word %s, ax", tempVar);
+
+			strcpy($$, tempVar);
+		} else {
+			sprintf(buffer, "mov ax, %s", $1);
+                        addCode(buffer);
+                        sprintf(buffer, "mov bx, %s", $3);
+                        addCode(buffer);
+                        sprintf(buffer, "mul bx");
+                        addCode(buffer);
+                        sprintf(buffer, "mov %s, ax", $1);
+		}
+	}
+	| term DIVIDE expression {
+		printf("expression: %s / %s\n", $1, $3);
+
+		// check if $1 is a variable
+		int isVariable = 0;
+		int i;
+		for (i = 0; i < variablesCount; i++) {
+			if (strcmp(variablesNames[i], $1) == 0) {
+				isVariable = 1;
+			}
+		}
+
+		if(!isVariable) {
+			sprintf(tempVar, "temp_%d", variablesCount);
+			addVariable(tempVar);
+
+			sprintf(buffer, "mov ax, %s", $1);
+			addCode(buffer);
+			sprintf(buffer, "mov bx, %s", $3);
+			addCode(buffer);
+			sprintf(buffer, "div bx");
+			addCode(buffer);
+			sprintf(buffer, "mov word [%s], ax", tempVar);
+
+			strcpy($$, tempVar);
+		} else {
+			sprintf(buffer, "mov ax, %s", $1);
+                        addCode(buffer);
+                        sprintf(buffer, "mov bx, %s", $3);
+                        addCode(buffer);
+                        sprintf(buffer, "div bx");
+                        addCode(buffer);
+                        sprintf(buffer, "mov %s, ax", $1);
+		}
+	}
+	| term;
+term: ID {
+		printf("term id %s\n", $1);
+		strcpy($$, $1);
+	}
+	| CONST {
+		printf("term const %s\n", $1);
+		strcpy($$, $1);
 	};
 
 %%
 
 void addVariable(char *variableName) {
+
+	for (int i = 0; i < variablesCount; i++) {
+		if (strcmp(variablesNames[i], variableName) == 0) {
+			printf("Variable %s already exists\n", variableName);
+			return;
+		}
+	}
+
 	sprintf(buffer, "%s dw 0\n", variableName);
 	strcat(dataSegment, buffer);
+
+	// add variable name to variablesNames
+	strcpy(variablesNames[variablesCount], variableName);
+	variablesCount++;
 }
 
 void addCode(char *code) {
-    strcat(codeSegment, code);
-    codeSegmentIndex += strlen(code);
+	strcat(code, "\n");
+    	strcat(codeSegment, code);
+    	codeSegmentIndex += strlen(code);
 }
 
 void writeAsmFile(char *fileName) {
@@ -81,7 +267,7 @@ void writeAsmFile(char *fileName) {
 	sprintf(asmFileName, "%s.asm", fileName);
 	FILE *asmFile = fopen(asmFileName, "w");
 
-	fprintf(asmFile, "bits 32\nglobal main\nextern exit\nextern printf\nextern scanf\n");
+	fprintf(asmFile, "bits 64\ndefault rel\nglobal main\nextern exit\nextern printf\nextern scanf\n");
         fprintf(asmFile, "\nsegment data use32 class=data\n");
         fprintf(asmFile, "mesaj db \'%%d\', 10, 0\nformat db \'%%d\',0\n");
         fprintf(asmFile, "%s", dataSegment);

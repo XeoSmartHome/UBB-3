@@ -17,6 +17,11 @@ id      [a-zA-Z_][a-zA-Z0-9_]*
 
 %%
 
+"fmt.Println" {return FMT_PRINTLN;}
+"fmt.Scanf" {return SCAN;}
+"&" {return AMP;}
+"(" {return LPAREN;}
+")" {return RPAREN;}
 "int" {return INT;}
 "+" {return PLUS;}
 "-" {return MINUS;}
@@ -27,12 +32,7 @@ id      [a-zA-Z_][a-zA-Z0-9_]*
 [ \t] { /* ignore */ }
 
 var {
-    printf("var\n");
     return VAR;
-}
-
-{integer} {
-    return CONST;
 }
 
 {id} {
@@ -40,8 +40,16 @@ var {
     return ID;
 }
 
+{integer} {
+    strcpy(yylval.name, yytext);
+    return CONST;
+}
 
-. {return OTHER;}
+
+. {
+    printf("Error: invalid character %s at line %d, column %d\n", yytext, rowCounter, yyleng);
+    return OTHER;
+}
 
 %%
 

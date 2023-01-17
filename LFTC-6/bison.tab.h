@@ -48,7 +48,12 @@
      TIMES = 264,
      DIVIDE = 265,
      EQUAL = 266,
-     OTHER = 267
+     OTHER = 267,
+     SCAN = 268,
+     FMT_PRINTLN = 269,
+     LPAREN = 270,
+     RPAREN = 271,
+     AMP = 272
    };
 #endif
 
@@ -59,7 +64,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 26 "bison.y"
+#line 29 "bison.y"
 
 	int value;
 	char name[64];
@@ -67,7 +72,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 71 "bison.tab.h"
+#line 76 "bison.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
