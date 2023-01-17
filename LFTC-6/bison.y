@@ -5,6 +5,10 @@
     	extern int ttparse();
     	extern FILE *yyin;
         extern char *yytext;
+
+        void yyerror(char *s) {
+	    fprintf(stderr, "Error: %s\n", s);
+	}
 %}
 
 %union {
