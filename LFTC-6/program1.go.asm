@@ -13,3 +13,4 @@ segment code use32 class=code
 main:
 mov eax, 0
 push dword 0
+call exit

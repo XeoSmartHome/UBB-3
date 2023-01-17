@@ -1615,14 +1615,13 @@ void writeAsmFile(char *fileName) {
 	sprintf(asmFileName, "%s.asm", fileName);
 	FILE *asmFile = fopen(asmFileName, "w");
 
-	fprintf(asmFile, "bits 64\nglobal start\nextern exit\nimport exit msvcrt.dll\n");
-        fprintf(asmFile, "extern printf\nimport printf msvcrt.dll\nextern scanf\nimport scanf msvcrt.dll\n");
+	fprintf(asmFile, "bits 32\nglobal main\nextern exit\nextern printf\nextern scanf\n");
         fprintf(asmFile, "\nsegment data use32 class=data\n");
         fprintf(asmFile, "mesaj db \'%%d\', 10, 0\nformat db \'%%d\',0\n");
         fprintf(asmFile, "%s", dataSegment);
-        fprintf(asmFile, "\nsegment code use32 class=code\nstart:\nmov eax, 0\n");
+        fprintf(asmFile, "\nsegment code use32 class=code\nmain:\nmov eax, 0\n");
         fprintf(asmFile, "%s", codeSegment);
-        fprintf(asmFile, "push dword 0\ncall [exit]\n");
+        fprintf(asmFile, "push dword 0\ncall exit\n");
 
         fclose(asmFile);
 }
