@@ -75,14 +75,14 @@ print: FMT_PRINTLN LPAREN expression RPAREN {
 	};
 
 read: SCAN LPAREN AMP ID RPAREN {
-		printf("read %s\n", $3);
-		sprintf(buffer, "push qword %s", $3);
+		printf("read %s\n", $4);
+		sprintf(buffer, "push qword %s", $4);
 		addCode(buffer);
-		sprintf(buffer, "push qword mesaj");
+		sprintf(buffer, "push qword format");
 		addCode(buffer);
 		sprintf(buffer, "call scanf");
 		addCode(buffer);
-};
+	};
 
 assignment: ID EQUAL expression {
 		printf("assignment: %s = %s\n", $1, $3);
