@@ -1,0 +1,15 @@
+     1                                  bits 32
+     2                                  global main
+     3                                  extern exit
+     4                                  extern printf
+     5                                  extern scanf
+     6                                  
+     7                                  segment data use32 class=data
+     8 00000000 25640A00                mesaj db '%d', 10, 0
+     9 00000004 256400                  format db '%d',0
+    10 00000007 0000                    a dw 0
+    11                                  
+    12                                  segment code use32 class=code
+    13                                  main:
+    14 00000000 B800000000              mov eax, 0
+    15 00000005 6A00                    push dword 0
